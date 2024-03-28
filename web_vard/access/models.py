@@ -1,9 +1,13 @@
 from django.db import models
 
+from file.models import File
+from user.models import User
+
 
 class Access(models.Model):
-    file = models.ForeignKey('File', on_delete=models.CASCADE)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     access_type = models.ForeignKey('AccessType', on_delete=models.CASCADE)
 
     date_access_open = models.DateTimeField(auto_now_add=True)
@@ -24,7 +28,8 @@ class AccessType(models.Model):
         READER: 'Reader',
         OWNER: 'Owner',
         COMMENTATOR: 'Commentator',
-        EDITOR: 'Editor'}
+        EDITOR: 'Editor'
+    }
 
     access_type = models.CharField(max_length=25,
                                    choices=CHOICES,

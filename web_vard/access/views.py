@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from rest_framework import views, response
-from access.serializers import AccessSerializer
-from access.models import Access
 import datetime
+
+from rest_framework import views, response
+
+from .serializers import AccessSerializer
+from .models import Access
 
 
 class GetPostAccessAPIView(views.APIView):
@@ -30,6 +31,7 @@ class GetPostAccessAPIView(views.APIView):
         serializer.save()
 
         return response.Response({'Access created': serializer.data})
+
 
 class PutDeleteAccessAPIView(views.APIView):
     def put(self, request, *args, **kwargs):

@@ -1,7 +1,11 @@
 from django.db import models
 
+from user.models import User
+
+
 class Feedback(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     date_creation = models.DateTimeField(auto_now_add=True)
     theme = models.CharField(max_length=255)

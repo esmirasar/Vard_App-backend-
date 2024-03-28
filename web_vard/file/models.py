@@ -1,20 +1,6 @@
 from django.db import models
 
-
-class File(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    place = models.ForeignKey('Place', on_delete=models.CASCADE)
-    type = models.ForeignKey('FileType', on_delete=models.CASCADE)
-
-    date_creation = models.DateTimeField(auto_now_add=True)
-    date_change = models.DateTimeField(null=True, blank=True)
-    date_delete = models.DateTimeField(null=True, blank=True)
-    name = models.CharField(max_length=255)
-    link = models.URLField()
-    publish = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
+from user.models import User
 
 
 class FileType(models.Model):
@@ -50,7 +36,8 @@ class Place(models.Model):
     CHOICES = {
         COMMUNITY: 'Community',
         MY_FILES: 'My_files',
-        BEST_PRACTICES: 'Best Practices'}
+        BEST_PRACTICES: 'Best Practices'
+    }
 
     type = models.CharField(max_length=25,
                             choices=CHOICES,
@@ -58,3 +45,20 @@ class Place(models.Model):
 
     def __str__(self):
         return self.type
+
+
+class File(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+    type = models.ForeignKey(FileType, on_delete=models.CASCADE)
+
+    date_creation = models.DateTimeField(auto_now_add=True)
+    date_change = models.DateTimeField(null=True, blank=True)
+    date_delete = models.DateTimeField(null=True, blank=True)
+    name = models.CharField(max_length=255)
+    link = models.URLField()
+    publish = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name

@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from rest_framework import views, response
-from file.serializers import FileSerializer
-from file.models import File
 import datetime
+
+from rest_framework import views, response
+
+from .serializers import FileSerializer
+from .models import File
 
 
 class GetPostFileAPIView(views.APIView):

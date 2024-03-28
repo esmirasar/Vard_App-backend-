@@ -1,7 +1,9 @@
-from django.shortcuts import render
+import datetime
+
 from rest_framework import views, response
-from chart.serializers import ChartSerializer
-from chart.models import Chart
+
+from .serializers import ChartSerializer
+from .models import Chart
 
 
 class GetPostChartAPIView(views.APIView):

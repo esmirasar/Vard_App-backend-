@@ -1,8 +1,11 @@
 from rest_framework import serializers
-from feedback.models import Feedback
+
+from .models import Feedback
+from user.models import User
 
 
 class FeedbackSerializer(serializers.Serializer):
+
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     date_creation = serializers.DateTimeField(read_only=True)
     theme = serializers.CharField(max_length=255)
@@ -12,6 +15,7 @@ class FeedbackSerializer(serializers.Serializer):
         return Feedback.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+
         instance.theme = validated_data.get('theme', instance.theme)
         instance.description = validated_data.get('description', instance.description)
         instance.save()

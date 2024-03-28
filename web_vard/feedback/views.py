@@ -1,7 +1,7 @@
-from django.shortcuts import render
 from rest_framework import views, response
-from feedback.models import Feedback
-from feedback.serializers import FeedbackSerializer
+
+from .serializers import FeedbackSerializer
+from .models import Feedback
 
 
 class GetPostFeedbackAPIView(views.APIView):

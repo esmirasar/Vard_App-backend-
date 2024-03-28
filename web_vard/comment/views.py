@@ -1,4 +1,9 @@
+import datetime
+
 from rest_framework import views, response
+
+from .serializers import CommentSerializer, ReadCommentSerializer
+from .models import Comment, ReadComment
 
 
 class GetPostCommentAPIView(views.APIView):

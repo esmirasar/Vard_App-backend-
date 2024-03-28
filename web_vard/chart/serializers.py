@@ -1,5 +1,7 @@
 from rest_framework import serializers
+
 from chart.models import Chart
+from user.models import User
 
 
 class ChartSerializer(serializers.Serializer):

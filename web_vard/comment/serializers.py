@@ -1,5 +1,11 @@
 from rest_framework import serializers
 
+from .models import Comment, ReadComment
+from chart.models import Chart
+from dashboard.models import Dashboard
+from file.models import File
+from user.models import User
+
 
 class CommentSerializer(serializers.Serializer):
 

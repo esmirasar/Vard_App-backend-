@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from file.models import File
+
+from .models import File, Place, FileType
+from user.models import User
 
 
 class FileSerializer(serializers.Serializer):
