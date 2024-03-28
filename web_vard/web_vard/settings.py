@@ -26,8 +26,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'models.apps.ModelsConfig',
-    'api.apps.ApiConfig',
     'user.apps.UserConfig',
     'access.apps.AccessConfig',
     'chart.apps.ChartConfig',
@@ -131,7 +129,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'models.User'
+AUTH_USER_MODEL = 'user.User'
 
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
