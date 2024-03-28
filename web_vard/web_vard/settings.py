@@ -28,6 +28,13 @@ INSTALLED_APPS = [
 
     'models.apps.ModelsConfig',
     'api.apps.ApiConfig',
+    'user.apps.UserConfig',
+    'access.apps.AccessConfig',
+    'chart.apps.ChartConfig',
+    'comment.apps.CommentConfig',
+    'dashboard.apps.DashboardConfig',
+    'feedback.apps.FeedbackConfig',
+    'file.apps.FileConfig',
 
     'allauth',
     'allauth.account',
@@ -147,7 +154,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication'
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication'
     # ]
 }
 

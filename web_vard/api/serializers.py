@@ -116,7 +116,6 @@ class CommentSerializer(serializers.Serializer):
         instance.dashboard = validated_data.get('dashboard', instance.dashboard)
         instance.chart = validated_data.get('chart', instance.chart)
         instance.comment = validated_data.get('comment', instance.comment)
-
         instance.save()
 
         return instance
@@ -153,7 +152,6 @@ class ReadCommentSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
 
         instance.comment = validated_data.get('comment', instance.comment)
-
         instance.save()
 
         return instance

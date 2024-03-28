@@ -1,6 +1,7 @@
 import datetime
 
-from rest_framework import views, response, generics
+from rest_framework import views, response
+
 
 from .serializers import (UserSerializer, FileSerializer, AccessSerializer, FeedbackSerializer,
                           ChartSerializer, DashboardSerializer, CommentSerializer, ReadCommentSerializer)
@@ -8,12 +9,8 @@ from .serializers import (UserSerializer, FileSerializer, AccessSerializer, Feed
 from models.models import (User, File,  Access, Feedback,
                            Chart, Dashboard, Comment, ReadComment)
 
-from .permissions import ReadOnDeleteAd
-
 
 class UserAPIView(views.APIView):
-    permission_classes = (ReadOnDeleteAd, )
-
     def get(self, request, *args, **kwargs):
 
         pk = kwargs.get('pk')
@@ -98,6 +95,7 @@ class FileAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = FileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -165,6 +163,7 @@ class DashboardAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = DashboardSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -231,6 +230,7 @@ class CommentAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = CommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -295,6 +295,7 @@ class AccessAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = AccessSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -359,6 +360,7 @@ class FeedbackAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = FeedbackSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -422,6 +424,7 @@ class ReadCommentAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = ReadCommentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -485,6 +488,7 @@ class ChartAPIView(views.APIView):
     def post(self, request):
 
         request.data['user'] = request.user.pk
+
         serializer = ChartSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
