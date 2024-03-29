@@ -6,7 +6,7 @@ from user.models import User
 
 
 class AccessSerializer(serializers.Serializer):
-
+    id = serializers.IntegerField(read_only=True)
     file = serializers.PrimaryKeyRelatedField(queryset=File.objects.all())
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     access_type = serializers.PrimaryKeyRelatedField(queryset=AccessType.objects.all())

@@ -1,9 +1,10 @@
 from django.urls import path
 
-from access.views import GetPostAccessAPIView, PutDeleteAccessAPIView
+from access.views import GetPostAccessAPIView, PutDeleteAccessAPIView, ListAccessAPIView
 
 
 urlpatterns = [
-    path('', GetPostAccessAPIView.as_view()),
-    path('<int:pk>/', PutDeleteAccessAPIView.as_view()),
+    path('all/', ListAccessAPIView.as_view()),
+    path('<str:my_access>/', GetPostAccessAPIView.as_view()),
+    path('<str:my_access>/<int:pk>/', PutDeleteAccessAPIView.as_view()),
 ]
