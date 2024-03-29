@@ -1,8 +1,9 @@
 from django.urls import path
-from file.views import GetPostFileAPIView, PutDeleteAPIView
+from file.views import FileAPIView, ShowListFileAPIView, PutDeleteAPIView
 
 
 urlpatterns = [
-    path('', GetPostFileAPIView.as_view()),
-    path('<int:pk>/', PutDeleteAPIView.as_view()),
+    path('all/', ShowListFileAPIView.as_view()),
+    path('<str:my_files>/', FileAPIView.as_view()),
+    path('<str:my_files>/<int:pk>/', PutDeleteAPIView.as_view())
 ]

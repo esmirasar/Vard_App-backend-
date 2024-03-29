@@ -6,6 +6,7 @@ from user.models import User
 
 class FeedbackSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     date_creation = serializers.DateTimeField(read_only=True)
     theme = serializers.CharField(max_length=255)

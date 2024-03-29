@@ -2,8 +2,33 @@ import datetime
 
 from rest_framework import views, response
 
+from web_vard.permissions import OnlyStaff
+
 from .serializers import CommentSerializer, ReadCommentSerializer
 from .models import Comment, ReadComment
+
+
+class AllCommentAPIView(views.APIView):
+
+    permission_classes = [OnlyStaff, ]
+
+    def get(self, request):
+
+        instance = Comment.objects.all()
+
+        return response.Response({'List data': CommentSerializer(instance, many=True).data})
+
+
+class AllReadCommentAPIView(views.APIView):
+
+    permission_classes = [OnlyStaff, ]
+
+    def get(self, request):
+
+        instance = ReadComment.objects.all()
+
+        return response.Response({'List data': ReadCommentSerializer(instance, many=True).data})
+
 
 
 class GetPostCommentAPIView(views.APIView):

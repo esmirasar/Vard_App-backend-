@@ -1,26 +1,39 @@
 from rest_framework import views, response
 
+from web_vard.permissions import OnlyStaff
+
 from .serializers import FeedbackSerializer
 from .models import Feedback
+
+
+class AllFeedbackAPIView(views.APIView):
+
+    permission_classes = [OnlyStaff, ]
+
+    def get(self, request, **kwargs):
+
+        instance = Feedback.objects.all()
+
+        return response.Response({'Data list': FeedbackSerializer(instance, many=True).data})
 
 
 class GetPostFeedbackAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
 
-        pk = kwargs.get('pk')
+        if kwargs.get('my_feedback') != 'my_feedback':
+            return response.Response({'Error': 'Data not defined'})
 
-        if not pk:
-            instance = Feedback.objects.all()
-            return response.Response({'Feedback list': FeedbackSerializer(instance, many=True).data})
+        instance = Feedback.objects.filter(user_id=request.user.pk)
 
-        try:
-            instance = Feedback.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        return response.Response({'My feedback': FeedbackSerializer(instance, many=True).data})
 
-        return response.Response({'Detail': FeedbackSerializer(instance).data})
+    def post(self, request, **kwargs):
 
-    def post(self, request):
+        if kwargs.get('my_feedback') != 'my_feedback':
+            return response.Response({'Error': 'Data not defined'})
+
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
 
         request.data['user'] = request.user.pk
 
@@ -32,20 +45,32 @@ class GetPostFeedbackAPIView(views.APIView):
 
 
 class PutDeleteFeedbackAPIView(views.APIView):
+    def get(self, request, **kwargs):
+
+        my_feedback = kwargs.get('my_feedback')
+        pk = kwargs.get('pk')
+        instance = Feedback.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_feedback != 'my_feedback' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = Feedback.objects.get(pk=pk)
+
+        return response.Response({'Data': FeedbackSerializer(instance).data})
+
     def put(self, request, *args, **kwargs):
 
+        my_feedback = kwargs.get('my_feedback')
         pk = kwargs.get('pk')
+        instance = Feedback.objects.filter(user_id=request.user.pk).values('pk')
 
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
+        if my_feedback != 'my_feedback' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
 
         if not request.data:
             return response.Response({'Error': 'Not data for change'})
 
-        try:
-            instance = Feedback.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        instance = Feedback.objects.get(pk=pk)
 
         serializer = FeedbackSerializer(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -55,17 +80,15 @@ class PutDeleteFeedbackAPIView(views.APIView):
 
     def delete(self, request, *args, **kwargs):
 
+        my_feedback = kwargs.get('my_feedback')
         pk = kwargs.get('pk')
+        instance = Feedback.objects.filter(user_id=request.user.pk).values('pk')
 
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
+        if my_feedback != 'my_feedback' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
 
-        try:
-            instance = Feedback.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        instance = Feedback.objects.get(pk=pk)
 
         instance.delete()
 
-        return response.Response({'Feedback deleted': f'Запись {pk} удалена'})
-
+        return response.Response({'Data delete': f'Data <{pk}> was deleted'})

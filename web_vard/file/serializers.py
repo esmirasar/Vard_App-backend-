@@ -6,6 +6,7 @@ from user.models import User
 
 class FileSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     place = serializers.PrimaryKeyRelatedField(queryset=Place.objects.all())
     type = serializers.PrimaryKeyRelatedField(queryset=FileType.objects.all())

@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Access, AccessType
+
+
+admin.site.register(Access)
+admin.site.register(AccessType)
