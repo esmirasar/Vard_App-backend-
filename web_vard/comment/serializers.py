@@ -9,6 +9,7 @@ from user.models import User
 
 class CommentSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField(read_only=True)
     file = serializers.PrimaryKeyRelatedField(queryset=File.objects.all())
     chart = serializers.PrimaryKeyRelatedField(queryset=Chart.objects.all())
     dashboard = serializers.PrimaryKeyRelatedField(queryset=Dashboard.objects.all())
@@ -34,6 +35,7 @@ class CommentSerializer(serializers.Serializer):
 
 class ReadCommentSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     comment = serializers.PrimaryKeyRelatedField(queryset=Comment.objects.all())
     date_reading = serializers.DateTimeField(read_only=True)

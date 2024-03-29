@@ -28,7 +28,7 @@ class FileAPIView(views.APIView):
         if kwargs.get('my_files') != 'my_files':
             return response.Response({'Error': 'Data not defined'})
 
-        instance = File.objects.filter(user_id=request.user.pk)
+        instance = File.objects.filter(user_id=request.user.pk, date_delete=None)
 
         return response.Response({'Your data': FileSerializer(instance, many=True).data})
 
