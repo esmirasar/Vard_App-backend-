@@ -34,6 +34,9 @@ class GetPostDashBoardAPIView(views.APIView):
 
     def post(self, request, **kwargs):
 
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
         if kwargs.get('my_dashboard') != 'my_dashboard':
             return response.Response({'Error': 'Data not defined'})
 
@@ -64,6 +67,9 @@ class DeletePutDashboardAPIView(views.APIView):
         return response.Response({'Data': DashboardSerializer(instance).data})
 
     def put(self, request, *args, **kwargs):
+
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
 
         my_dashboard = kwargs.get('my_dashboard')
         pk = kwargs.get('pk')

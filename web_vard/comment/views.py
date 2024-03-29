@@ -2,7 +2,7 @@ import datetime
 
 from rest_framework import views, response
 
-from web_vard.permissions import OnlyStaff
+from web_vard.permissions import OnlyStaff, PerCustom
 
 from .serializers import CommentSerializer, ReadCommentSerializer
 from .models import Comment, ReadComment
@@ -30,24 +30,26 @@ class AllReadCommentAPIView(views.APIView):
         return response.Response({'List data': ReadCommentSerializer(instance, many=True).data})
 
 
-
 class GetPostCommentAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
     def get(self, request, *args, **kwargs):
 
-        pk = kwargs.get('pk')
+        if kwargs.get('my_comment') != 'my_comment':
+            return response.Response({'Error': 'Data not defined'})
 
-        if not pk:
-            instance = Comment.objects.all()
-            return response.Response({'list comments': CommentSerializer(instance, many=True).data})
+        instance = Comment.objects.filter(user_id=request.user.pk, date_remove=None)
 
-        try:
-            instance = Comment.objects.get(pk=pk)
-        except:
-            return response.Response({'Error': 'data not defined'})
+        return response.Response({'Data': CommentSerializer(instance, many=True).data})
 
-        return response.Response({'Detail': CommentSerializer(instance).data})
+    def post(self, request, **kwargs):
 
-    def post(self, request):
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
+        if kwargs.get('my_comment') != 'my_comment':
+            return response.Response({'Error': 'Data not defined'})
 
         request.data['user'] = request.user.pk
 
@@ -59,20 +61,38 @@ class GetPostCommentAPIView(views.APIView):
 
 
 class DeletePutCommentAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
+    def get(self, request, **kwargs):
+
+        comment = kwargs.get('my_comment')
+        pk = kwargs.get('pk')
+        instance = Comment.objects.filter(user_id=request.user.id).values('pk')
+
+        if comment != 'my_comment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = Comment.objects.get(pk=pk)
+
+        if instance.date_remove:
+            return response.Response({'Data delete': f'Data <{pk}> was deleted'})
+
+        return response.Response({'Data': CommentSerializer(instance).data})
+
     def put(self, request, *args, **kwargs):
 
-        pk = kwargs.get('pk')
-
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
-
         if not request.data:
-            return response.Response({'Error': 'Not data for change'})
+            return response.Response({'Error': 'Enter data'})
 
-        try:
-            instance = Comment.object.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        comment = kwargs.get('my_comment')
+        pk = kwargs.get('pk')
+        instance = Comment.objects.filter(user_id=request.user.id).values('pk')
+
+        if comment != 'my_comment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = Comment.object.get(pk=pk)
 
         serializer = CommentSerializer(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -82,20 +102,102 @@ class DeletePutCommentAPIView(views.APIView):
 
     def delete(self, request, *args, **kwargs):
 
+        comment = kwargs.get('my_comment')
         pk = kwargs.get('pk')
+        instance = Comment.objects.filter(user_id=request.user.id).values('pk')
 
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
+        if comment != 'my_comment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
 
-        try:
-            instance = Comment.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        instance = Comment.objects.get(pk=pk)
 
         instance.date_remove = datetime.datetime.now()
         instance.save()
 
-        return response.Response({'Data deleted': f'Комментарий под номером {pk} удален'})
+        return response.Response({'Data delete': f'Data <{pk}> was deleted'})
+
+
+class GetPostReadCommentAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
+    def get(self, request, **kwargs):
+
+        if kwargs.get('my_readcomment') != 'my_readcomment':
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = ReadComment.objects.filter(user_id=request.user.pk)
+
+        return response.Response({'Data': ReadCommentSerializer(instance, many=True).data})
+
+    def post(self, request, **kwargs):
+
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
+        if kwargs.get('my_readcomment') != 'my_readcomment':
+            return response.Response({'Error': 'Data not defined'})
+
+        request.data['user'] = request.user.pk
+
+        serializer = ReadCommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return response.Response({'ReadComment created': serializer.data})
+
+
+class PutDeleteReadCommentAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
+    def get(self, request, **kwargs):
+
+        my_read_comment = kwargs.get('my_readcomment')
+        pk = kwargs.get('pk')
+        instance = ReadComment.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_read_comment != 'my_readcomment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = ReadComment.objects.get(pk=pk)
+
+        return response.Response({'Data': ReadCommentSerializer(instance).data})
+
+    def put(self, request, **kwargs):
+
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
+        my_read_comment = kwargs.get('my_readcomment')
+        pk = kwargs.get('pk')
+        instance = ReadComment.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_read_comment != 'my_readcomment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = ReadComment.objects.get(pk=pk)
+
+        serializer = ReadCommentSerializer(instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return response.Response({'Data update': serializer.data})
+
+    def delete(self, request, **kwargs):
+
+        my_read_comment = kwargs.get('my_readcomment')
+        pk = kwargs.get('pk')
+        instance = ReadComment.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_read_comment != 'my_readcomment' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data not defined'})
+
+        instance = ReadComment.objects.get(pk=pk)
+
+        instance.delete()
+
+        return response.Response({'Data delete': f'Data <{pk}> was deleted'})
 
 
 class ReadCommentAPIView(views.APIView):

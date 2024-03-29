@@ -37,6 +37,9 @@ class PostUserAPIView(views.APIView):
 
     def post(self, request):
 
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
