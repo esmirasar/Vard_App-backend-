@@ -2,27 +2,43 @@ import datetime
 
 from rest_framework import views, response
 
+from web_vard.permissions import OnlyStaff, PerCustom
+
 from .serializers import AccessSerializer
 from .models import Access
 
 
+class ListAccessAPIView(views.APIView):
+
+    permission_classes = [OnlyStaff, ]
+
+    def get(self, request):
+
+        instance = Access.objects.all()
+
+        return response.Response({'List data': AccessSerializer(instance, many=True).data})
+
+
 class GetPostAccessAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
     def get(self, request, *args, **kwargs):
 
-        pk = kwargs.get('pk')
+        if kwargs.get('my_access') != 'my_access':
+            return response.Response({'Error': 'Data not defined'})
 
-        if not pk:
-            instance = Access.objects.all()
-            return response.Response({'Access list': AccessSerializer(instance, many=True).data})
+        instance = Access.objects.filter(user_id=request.user.pk, date_access_close=None)
 
-        try:
-            instance = Access.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        return response.Response({'Detail': AccessSerializer(instance, many=True).data})
 
-        return response.Response({'Detail': AccessSerializer(instance).data})
+    def post(self, request, **kwargs):
 
-    def post(self, request):
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
+        if kwargs.get('my_access') != 'my_access':
+            return response.Response({'Error': 'Data not defined'})
 
         request.data['user'] = request.user.pk
 
@@ -34,38 +50,57 @@ class GetPostAccessAPIView(views.APIView):
 
 
 class PutDeleteAccessAPIView(views.APIView):
+
+    permission_classes = [PerCustom, ]
+
+    def get(self, request, **kwargs):
+
+        my_access = kwargs.get('my_access')
+        pk = kwargs.get('pk')
+        instance = Access.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_access != 'my_access' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'data not defined'})
+
+        instance = Access.objects.get(pk=pk)
+
+        if instance.date_access_close:
+            return response.Response({'Data delete': f'Data <{pk}> was deleted'})
+
+        return response.Response({'Data': AccessSerializer(instance).data})
+
     def put(self, request, *args, **kwargs):
 
-        pk = kwargs.get('pk')
-
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
-
         if not request.data:
-            return response.Response({'Error': 'Not data for change'})
+            return response.Response({'Error': 'Enter data'})
 
-        try:
-            instance = Access.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        my_access = kwargs.get('my_access')
+        pk = kwargs.get('pk')
+        instance = Access.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_access != 'my_access' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'data not defined'})
+
+        instance = Access.objects.get(pk=pk)
+
+        instance.date_change = datetime.datetime.now()
 
         serializer = AccessSerializer(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return response.Response({'Access update': serializer.data})
+        return response.Response({'Data update': serializer.data})
 
     def delete(self, request, *args, **kwargs):
 
+        my_access = kwargs.get('my_access')
         pk = kwargs.get('pk')
+        instance = Access.objects.filter(user_id=request.user.pk).values('pk')
 
-        if not pk:
-            return response.Response({'Error': 'PK not defined'})
+        if my_access != 'my_access' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'data not defined'})
 
-        try:
-            instance = Access.objects.get(pk=pk)
-        except:
-            return response.Response({'ORM error': 'Not data'})
+        instance = Access.objects.get(pk=pk)
 
         instance.date_access_close = datetime.datetime.now()
         instance.save()

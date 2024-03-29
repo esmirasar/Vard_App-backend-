@@ -62,8 +62,6 @@ class PutDeleteAPIView(views.APIView):
         if my_files != 'my_files' or {'pk': pk} not in instance:
             return response.Response({'Error': 'Data not defined'})
 
-        pk = kwargs.get('pk')
-
         instance = File.objects.get(pk=pk)
 
         if instance.date_delete:
