@@ -57,7 +57,7 @@ class File(models.Model):
     date_change = models.DateTimeField(null=True, blank=True)
     date_delete = models.DateTimeField(null=True, blank=True)
     name = models.CharField(max_length=255)
-    link = models.FileField(upload_to='file/media/', null=True, blank=True)
+    link = models.FilePathField(null=True, blank=True)
     publish = models.BooleanField(default=False)
 
     def __str__(self):

@@ -17,6 +17,6 @@ urlpatterns = [
 
     path('api/connection/', include('local_db.urls')),
 
-    # path(r'^auth/', include('djoser.urls')),
-    # path(r'^auth/', include('djoser.urls.jwt'))
+    #path(r'^auth/', include('djoser.urls')),
+    #path(r'^auth/', include('djoser.urls.jwt'))
 ]

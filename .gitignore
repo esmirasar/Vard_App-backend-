@@ -9,3 +9,4 @@ local_settings.py
 **/*.pyc
 *.py[cod]
 *$py.class
+web_vard/file/media
