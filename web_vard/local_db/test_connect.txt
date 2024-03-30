@@ -1,0 +1,7 @@
+from sqlalchemy import orm, text
+
+
+with orm.Session(autoflush=False, bind=engine) as db:
+    result = db.execute(text('select * from user_user')).all()
+
+return response.Response({'Data': UserSerializer(result, many=True).data})

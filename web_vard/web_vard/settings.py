@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'feedback.apps.FeedbackConfig',
     'file.apps.FileConfig',
+    'local_db.apps.LocalDbConfig',
 
     'allauth',
     'allauth.account',
