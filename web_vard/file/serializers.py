@@ -14,7 +14,7 @@ class FileSerializer(serializers.Serializer):
     date_change = serializers.DateTimeField(read_only=True)
     date_delete = serializers.DateTimeField(read_only=True)
     name = serializers.CharField(max_length=255)
-    link = serializers.URLField(max_length=255)
+    link = serializers.FilePathField(path='file/media/')
     publish = serializers.BooleanField(default=True)
 
     def create(self, validated_data):
