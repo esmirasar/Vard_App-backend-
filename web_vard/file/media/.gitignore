@@ -1,0 +1,11 @@
+venv
+.idea
+.env
+**/__pycache__
+__pycache__/
+*/__pacache__/
+local_settings.py
+**/*.cpython-312.pyc
+**/*.pyc
+*.py[cod]
+*$py.class
