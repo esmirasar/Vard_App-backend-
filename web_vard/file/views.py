@@ -21,7 +21,7 @@ class ShowListFileAPIView(views.APIView):
 
 class FileAPIView(views.APIView):
 
-    permission_classes = [PerCustom, ]
+    # permission_classes = [PerCustom, ]
 
     @staticmethod
     def handle_uploaded_file(f):
@@ -48,24 +48,15 @@ class FileAPIView(views.APIView):
 
         request.data['user'] = 1
 
-        if request.data.get('forms'):
-            name_file = f'file/media/{request.data["name"]}_{File.objects.all().count() + 1}'
-            extension_file = f'{FileType.objects.get(id=request.data["type"]).files_type.lower()}'
-
-            with open(f'{name_file}.{extension_file}', 'w+') as file:
-                file.write(request.data['forms'])
-
-            request.data['link'] = f'{name_file}.{extension_file}'
-
         if request.FILES:
-            self.handle_uploaded_file(request.FILES['link1'])
-            request.data['link'] = f'file/media/{request.FILES["link1"].name}'
+            for file in request.FILES.getlist('file_1'):
+                self.handle_uploaded_file(file)
+                request.data['link'] = f'file/media/{file.name}'
+                serializer = FileSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
 
-        serializer = FileSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return response.Response({'File created': serializer.data})
+        return response.Response({'Success': 'data created'})
 
 
 class PutDeleteAPIView(views.APIView):
