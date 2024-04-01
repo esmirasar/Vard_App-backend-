@@ -49,9 +49,9 @@ class FileAPIView(views.APIView):
         request.data['user'] = 1
 
         if request.FILES:
-            for file in request.FILES.getlist('file_1'):
-                self.handle_uploaded_file(file)
-                request.data['link'] = f'file/media/{file.name}'
+            for i in request.FILES.getlist('link1'):
+                self.handle_uploaded_file(i)
+                request.data['link'] = f'file/media/{i.name}'
                 serializer = FileSerializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
