@@ -18,7 +18,7 @@ class FeedbackSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
 
         instance.theme = validated_data.get('theme', instance.theme)
-        instance.description = validated_data.get('description', instance.description)
+        instance.description = validated_data.get('comment', instance.description)
         instance.save()
 
         return instance

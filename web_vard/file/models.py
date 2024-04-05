@@ -60,5 +60,7 @@ class File(models.Model):
     link = models.FilePathField(null=True, blank=True)
     publish = models.BooleanField(default=False)
 
+
+
     def __str__(self):
         return self.name

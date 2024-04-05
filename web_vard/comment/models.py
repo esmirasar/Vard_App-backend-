@@ -8,15 +8,15 @@ from user.models import User
 
 class Comment(models.Model):
 
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    chart = models.ForeignKey(Chart, on_delete=models.CASCADE)
-    dashboard = models.ForeignKey(Dashboard, on_delete=models.CASCADE)
+    file = models.ForeignKey(File, on_delete=models.CASCADE, null=True, blank=True)
+    chart = models.ForeignKey(Chart, on_delete=models.CASCADE, null=True, blank=True)
+    dashboard = models.ForeignKey(Dashboard, on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    date_send = models.DateTimeField(auto_now_add=True)
+    date_send = models.DateTimeField(null=True, blank=True)
     date_remove = models.DateTimeField(null=True, blank=True)
-    date_delivery = models.DateTimeField(auto_now_add=True)
-    comment = models.TextField()
+    date_delivery = models.DateTimeField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.user}: {self.comment}'

@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('port', models.IntegerField(blank=True, null=True)),
                 ('data_base_type', models.CharField(blank=True, max_length=255, null=True)),
                 ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('description', models.CharField(blank=True, max_length=255, null=True)),
+                ('comment', models.CharField(blank=True, max_length=255, null=True)),
             ],
         ),
     ]

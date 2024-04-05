@@ -35,7 +35,7 @@ class PostConnectionAPIView(views.APIView):
             db_port = request.data['port']
             data_base_type = request.data['data_base_type']
             db_name = request.data['name']
-            description = request.data['description']
+            description = request.data['comment']
         except KeyError:
             return response.Response({'The form is not completed'})
 
