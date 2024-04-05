@@ -84,7 +84,30 @@ class PutDeleteAPIView(views.APIView):
         instance_comment = Comment.objects.filter(file_id=pk)
 
         return response.Response({'Your file': FileSerializer(instance).data,
-                                  'File description': CommentSerializer(instance_comment).data})
+                                  'File description': CommentSerializer(instance_comment, many=True).data})
+
+    def post(self, request, **kwargs):
+
+        if not request.data:
+            return response.Response({'Error': 'Enter data'})
+
+        my_files = kwargs.get('my_files')
+        pk = kwargs.get('pk')
+        instance = File.objects.filter(user_id=request.user.pk).values('pk')
+
+        if my_files != 'my_files' or {'pk': pk} not in instance:
+            return response.Response({'Error': 'Data nor defined'})
+
+        request.data['user'] = request.user.pk
+        request.data['date_send'] = datetime.datetime.now()
+        request.data['date_delivery'] = datetime.datetime.now()
+        request.data['file'] = pk
+
+        serializer = CommentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return response.Response({'Comment added': serializer.data})
 
     def put(self, request, *args, **kwargs):
 
@@ -104,8 +127,10 @@ class PutDeleteAPIView(views.APIView):
             instance.date_change = datetime.datetime.now()
 
         if request.data.get('description'):
+
             Comment.objects.create(user_id=request.user.pk, file_id=pk)
             instance_comment = Comment.objects.get(file_id=pk)
+            instance_comment.comment = request.data['description']
             instance_comment.date_send = datetime.datetime.now()
             serializer_comment = CommentSerializer(data=request.data, instance=instance_comment, partial=True)
             serializer_comment.is_valid(raise_exception=True)

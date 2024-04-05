@@ -10,12 +10,12 @@ from user.models import User
 class CommentSerializer(serializers.Serializer):
 
     id = serializers.IntegerField(read_only=True)
-    file = serializers.PrimaryKeyRelatedField(queryset=File.objects.all(), allow_null=True, allow_empty=True)
-    chart = serializers.PrimaryKeyRelatedField(queryset=Chart.objects.all(), allow_null=True, allow_empty=True)
-    dashboard = serializers.PrimaryKeyRelatedField(queryset=Dashboard.objects.all(), allow_null=True, allow_empty=True)
+    file = serializers.PrimaryKeyRelatedField(queryset=File.objects.all())
+    chart = serializers.PrimaryKeyRelatedField(read_only=True)
+    dashboard = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    date_send = serializers.DateTimeField(allow_null=True )
-    date_remove = serializers.DateTimeField(allow_null=True)
+    date_send = serializers.DateTimeField(allow_null=True)
+    date_remove = serializers.DateTimeField(default=None)
     date_delivery = serializers.DateTimeField(allow_null=True)
     comment = serializers.CharField(allow_null=True, allow_blank=True)
 
