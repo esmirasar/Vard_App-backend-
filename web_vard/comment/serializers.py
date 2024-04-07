@@ -10,8 +10,8 @@ from user.models import User
 class CommentSerializer(serializers.Serializer):
 
     id = serializers.IntegerField(read_only=True)
-    file = serializers.PrimaryKeyRelatedField(queryset=File.objects.all())
-    chart = serializers.PrimaryKeyRelatedField(read_only=True)
+    file = serializers.PrimaryKeyRelatedField(default=None, queryset=File.objects.all())
+    chart = serializers.PrimaryKeyRelatedField(default=None,queryset=Chart.objects.all())
     dashboard = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     date_send = serializers.DateTimeField(allow_null=True)

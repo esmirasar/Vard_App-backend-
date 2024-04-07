@@ -126,18 +126,6 @@ class PutDeleteAPIView(views.APIView):
         if request.data:
             instance.date_change = datetime.datetime.now()
 
-        if request.data.get('description'):
-
-            Comment.objects.create(user_id=request.user.pk, file_id=pk)
-            instance_comment = Comment.objects.get(file_id=pk)
-            instance_comment.comment = request.data['description']
-            instance_comment.date_send = datetime.datetime.now()
-            serializer_comment = CommentSerializer(data=request.data, instance=instance_comment, partial=True)
-            serializer_comment.is_valid(raise_exception=True)
-            serializer_comment.save()
-            instance_comment.date_delivery = datetime.datetime.now()
-            serializer_comment.save()
-
         serializer = FileSerializer(data=request.data, instance=instance, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
