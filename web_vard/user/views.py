@@ -3,11 +3,13 @@ import datetime
 from django.contrib.auth import logout
 
 from rest_framework import views, response
+from rest_framework.decorators import api_view
 
 from web_vard.permissions import UserPerCustom, OnlyStaff
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Token
+from .serializers import UserSerializer, TokenSerializer
+from .constant import RANDOM_STRING
 
 
 class ShowListUserAPIView(views.APIView):
@@ -40,11 +42,39 @@ class PostUserAPIView(views.APIView):
         if not request.data:
             return response.Response({'Error': 'Enter data'})
 
-        serializer = UserSerializer(data=request.data)
+        if len(request.data) > 3:
+            return response.Response({'Error': 'More than 3 fields'})
+
+        if not request.data.get('username'):
+            return response.Response({'Error': 'Enter username'})
+
+        if not request.data.get('email'):
+            return response.Response({'Error': 'Enter email'})
+
+        if not request.data.get('password'):
+            return response.Response({'Error': 'Enter password'})
+
+        request.data['token'] = RANDOM_STRING
+        serializer = TokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return response.Response({'User created': serializer.data})
+        return response.Response({'Success': 'Check email'})
+
+
+@api_view(('POST', ))
+def accept_registration(request, **kwargs):
+    try:
+        data = Token.objects.get(token=kwargs['token'])
+    except:
+        return response.Response({'Error': '404'})
+
+    token_serializer = TokenSerializer(data).data
+    user_serializer = UserSerializer(data=token_serializer)
+    user_serializer.is_valid(raise_exception=True)
+    user_serializer.save()
+    data.delete()
+    return response.Response({'Success': "User registered"})
 
 
 class GetPutDeleteUserAPIView(views.APIView):

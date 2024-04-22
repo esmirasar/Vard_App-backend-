@@ -52,3 +52,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             return self.name
 
         return self.email
+
+
+class Token(models.Model):
+    token = models.CharField(max_length=100)
+    name = models.CharField(max_length=25, null=True, blank=True)
+    email = models.EmailField(max_length=100)
+    password = models.CharField(max_length=100)

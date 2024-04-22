@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Token
 
 
 class UserSerializer(serializers.Serializer):
@@ -31,3 +31,14 @@ class UserSerializer(serializers.Serializer):
         instance.save()
 
         return instance
+
+
+class TokenSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=100)
+    name = serializers.CharField(max_length=25, allow_null=True, allow_blank=True)
+    email = serializers.EmailField(max_length=100)
+    password = serializers.CharField(max_length=100)
+
+    def create(self, validated_data):
+        return Token.objects.create(**validated_data)
+
